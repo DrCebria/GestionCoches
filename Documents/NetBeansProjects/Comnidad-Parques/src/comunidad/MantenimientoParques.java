@@ -172,7 +172,10 @@ public class MantenimientoParques extends javax.swing.JFrame {
             con = DriverManager.getConnection(Direccion, "root", "root");
 
             if (con != null) {
-                Consulta = "INSERT INTO parques.parque(id, nombre, extension, idComunidad) VALUES (" + FieldId.getText() + " , '"+ FieldNombre.getText() + "', " + FieldExtension.getText() + ", " + FieldCodigo.getText() + ")";
+                Consulta = "Select id from parques.comunidad where ";
+                ComboComunidades.getSelectedItem();
+                
+                Consulta = "INSERT INTO parques.parque(id, nombre, extension, idComunidad) VALUES (" + FieldId.getText() + " , '"+ FieldNombre.getText() + "', " + FieldExtension.getText() + ", " /*+ FieldCodigo.getText() + ")"*/;
                 ps = con.prepareStatement(Consulta);
                 ps.executeUpdate();
                 
