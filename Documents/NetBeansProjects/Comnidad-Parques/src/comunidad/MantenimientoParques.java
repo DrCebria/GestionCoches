@@ -5,12 +5,12 @@
  */
 package comunidad;
 
-import static comunidad.FichaComunidades.con;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 /**
  *
@@ -24,13 +24,22 @@ public class MantenimientoParques extends javax.swing.JFrame {
     static PreparedStatement ps;
     static ResultSet rs;
 
+    HashMap comunidades = new HashMap <>();
     public MantenimientoParques() {
         initComponents();
+        
         try {
             con = DriverManager.getConnection(Direccion, "root", "root");
             if (con != null) {
                 LabelConexion.setText("CONEXIÓN ESTABLECIDA");
-
+                Consulta="select * from comunidad";
+                ps= con.prepareStatement(Consulta);
+                rs= ps.executeQuery();
+                while (rs.next()){
+                    comunidades.put(rs.getInt("id"),rs.getString("nombre"));
+                    
+                }
+                System.out.println(comunidades);
             } else {
             }
 
@@ -168,14 +177,13 @@ public class MantenimientoParques extends javax.swing.JFrame {
 
     private void BotonInsertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonInsertActionPerformed
         try {
-
+            
             con = DriverManager.getConnection(Direccion, "root", "root");
-
             if (con != null) {
                 Consulta = "Select id from parques.comunidad where ";
-                ComboComunidades.getSelectedItem();
                 
-                Consulta = "INSERT INTO parques.parque(id, nombre, extension, idComunidad) VALUES (" + FieldId.getText() + " , '"+ FieldNombre.getText() + "', " + FieldExtension.getText() + ", " /*+ FieldCodigo.getText() + ")"*/;
+                
+                Consulta = "INSERT INTO parques.parque(id, nombre, extension, idComunidad) VALUES (" + FieldId.getText() + " , '"+ FieldNombre.getText() + "', " + FieldExtension.getText() + ", "+ comunidades.get(ComboComunidades.getSelectedItem().toString());;
                 ps = con.prepareStatement(Consulta);
                 ps.executeUpdate();
                 
