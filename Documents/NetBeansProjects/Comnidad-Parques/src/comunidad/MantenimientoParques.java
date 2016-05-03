@@ -36,10 +36,10 @@ public class MantenimientoParques extends javax.swing.JFrame {
                 ps= con.prepareStatement(Consulta);
                 rs= ps.executeQuery();
                 while (rs.next()){
-                    comunidades.put(rs.getInt("id"),rs.getString("nombre"));
+                    comunidades.put(rs.getString("nombre"), rs.getInt("id"));
                     
                 }
-                System.out.println(comunidades);
+                
             } else {
             }
 
@@ -183,7 +183,9 @@ public class MantenimientoParques extends javax.swing.JFrame {
                 Consulta = "Select id from parques.comunidad where ";
                 
                 
-                Consulta = "INSERT INTO parques.parque(id, nombre, extension, idComunidad) VALUES (" + FieldId.getText() + " , '"+ FieldNombre.getText() + "', " + FieldExtension.getText() + ", "+ comunidades.get(ComboComunidades.getSelectedItem().toString());;
+                Consulta = "INSERT INTO parques.parque (id, nombre, extension, idComunidad) "
+                        + "VALUES ('" + FieldId.getText() + "' , '"+ FieldNombre.getText() + "', '" 
+                        + FieldExtension.getText() + "', "+ comunidades.get(ComboComunidades.getSelectedItem().toString())+")";
                 ps = con.prepareStatement(Consulta);
                 ps.executeUpdate();
                 
