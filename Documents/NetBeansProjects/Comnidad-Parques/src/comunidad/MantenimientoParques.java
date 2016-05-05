@@ -179,9 +179,7 @@ public class MantenimientoParques extends javax.swing.JFrame {
         try {
             
             con = DriverManager.getConnection(Direccion, "root", "root");
-            if (con != null) {
-                Consulta = "Select id from parques.comunidad where ";
-                
+            if (con != null) {           
                 
                 Consulta = "INSERT INTO parques.parque (id, nombre, extension, idComunidad) "
                         + "VALUES ('" + FieldId.getText() + "' , '"+ FieldNombre.getText() + "', '" 
@@ -190,7 +188,7 @@ public class MantenimientoParques extends javax.swing.JFrame {
                 ps.executeUpdate();
                 
             }
-
+            
         } catch (SQLException e) {
             LabelConexion.setText(e.getMessage() + " -- " + e.getErrorCode());
 
@@ -205,7 +203,7 @@ public class MantenimientoParques extends javax.swing.JFrame {
             if (con != null) {
                 Double id2;
                 
-                Consulta = "DELETE FROM parques.parque WHERE 'id'="+FieldId.getText();
+                Consulta = "DELETE FROM parques.parque WHERE id= "+FieldId.getText();
                 ps = con.prepareStatement(Consulta);
                 ps.executeUpdate();
                 
@@ -218,7 +216,20 @@ public class MantenimientoParques extends javax.swing.JFrame {
     }//GEN-LAST:event_BotonDeleteActionPerformed
 
     private void BotonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonUpdateActionPerformed
-        // TODO add your handling code here:
+       try {
+            
+            con = DriverManager.getConnection(Direccion, "root", "root");
+            if (con != null) {             
+                
+                Consulta = "UPDATE parques. SET column1=value1,column2=value2,... WHERE some_column=some_value";
+
+                        ps = con.prepareStatement(Consulta);
+                ps.executeUpdate();
+                
+            }
+            
+        } catch (SQLException e) {
+            LabelConexion.setText(e.getMessage() + " -- " + e.getErrorCode());
     }//GEN-LAST:event_BotonUpdateActionPerformed
 
     /**
