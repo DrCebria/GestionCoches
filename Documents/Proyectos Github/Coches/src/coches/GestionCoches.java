@@ -27,7 +27,7 @@ public class GestionCoches {
     private Connection conexion;
     String direccion = "jdbc:mysql://localhost:3306/parques";
     String titulos[] = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
-    String filas[] = new String [6];
+    String filas[] = new String[6];
     String createTable = "CREATE TABLE coches ("
             + "  Matricula varchar(45) NOT NULL,"
             + "  Marca varchar(45) NOT NULL,"
@@ -38,12 +38,9 @@ public class GestionCoches {
             + "  PRIMARY KEY (Matricula)"
             + ") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
     DefaultTableModel modelo = new DefaultTableModel(null, titulos);
-    static PreparedStatement ps;
-    static ResultSet rs;
-    static String linea;
-    static String[] trozos;
 
     public Connection crearConexion() {
+        
         try {
             conexion = DriverManager.getConnection(direccion, "root", "root");
 
@@ -56,6 +53,8 @@ public class GestionCoches {
     }
 
     public boolean crearTablaCoches() {
+        PreparedStatement ps;
+        ResultSet rs;
         boolean comp = false;
         try {
 
@@ -70,17 +69,23 @@ public class GestionCoches {
     }
 
     public int cargarTablaCoches(File fichero) {
+        PreparedStatement ps;
+        ResultSet rs;
+        String linea;
+        String[] trozos;
         int contador = 0;
         try (FileReader fr = new FileReader(fichero)) {
             BufferedReader br = new BufferedReader(fr);
-            while (br.readLine() != null) {
+            while ((linea = br.readLine()) != null) {
                 contador++;
-                linea = br.readLine();
+                
                 trozos = linea.split(":");
-                
-                
+                for (String t : trozos) {
+
+                }
+
             }
-            
+
         } catch (IOException ex) {
             throw new RuntimeException(ex);
 
