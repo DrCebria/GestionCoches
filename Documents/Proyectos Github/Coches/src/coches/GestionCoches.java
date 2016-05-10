@@ -22,12 +22,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GestionCoches {
 
-    public GestionCoches(Connection conexion) {
-        this.conexion = conexion;
-    }
     
     private Connection conexion;
-    String direccion = "jdbc:mysql://localhost:3306/coches";
     String titulos[] = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
     String filas[] = new String[6];
     String createTable = "CREATE TABLE coches ("
@@ -49,9 +45,9 @@ public class GestionCoches {
      * @return Conection
      */
     public Connection crearConexion() {
-
+        
         try {
-            this.conexion = DriverManager.getConnection(direccion, "root", "root");
+            this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/coches", "root", "root");
 
         } catch (SQLException e) {
             //LabelConexion.setText(e.getMessage() + " -- " + e.getErrorCode());

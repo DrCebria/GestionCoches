@@ -5,29 +5,28 @@
  */
 package coches;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author daw1
- */
 public class VentanaGrafica extends javax.swing.JFrame {
-
     
-
+    GestionCoches gestion = new GestionCoches();
+    
     public VentanaGrafica() {
         initComponents();
-        
+        if (gestion.crearConexion() != null) {
+            LabelConexion.setText("CONEXIÓN ESTABLECIDA");
+        }
     }
-
     
-
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -44,10 +43,19 @@ public class VentanaGrafica extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         botonCrear.setText("Crear table coches");
+        botonCrear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCrearActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Archivo original de datos");
 
-        jTextField1.setText("jTextField1");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextField1MouseClicked(evt);
+            }
+        });
 
         BotonCargarDatos.setText("Cargar Datos");
 
@@ -117,6 +125,25 @@ public class VentanaGrafica extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
+        // TODO add your handling code here:
+        JFileChooser fc = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
+        fc.setFileFilter(filter);
+        int returnVal = fc.showOpenDialog(this);
+        
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            this.jTextField1.setText(file.getAbsolutePath());
+            
+        }
+    }//GEN-LAST:event_jTextField1MouseClicked
+
+    private void botonCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCrearActionPerformed
+        // TODO add your handling code here:
+        gestion.crearTablaCoches();
+    }//GEN-LAST:event_botonCrearActionPerformed
 
     /**
      * @param args the command line arguments
