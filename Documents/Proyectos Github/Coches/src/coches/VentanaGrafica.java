@@ -12,6 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -19,7 +21,6 @@ import javax.swing.table.DefaultTableModel;
 public class VentanaGrafica extends javax.swing.JFrame {
     
     GestionCoches gestion = new GestionCoches();
-    
     public VentanaGrafica() {
         initComponents();
         if (gestion.crearConexion() != null) {
@@ -42,7 +43,7 @@ public class VentanaGrafica extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        botonCrear.setText("Crear table coches");
+        botonCrear.setText("Crear tabla coches");
         botonCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 botonCrearActionPerformed(evt);
@@ -58,20 +59,33 @@ public class VentanaGrafica extends javax.swing.JFrame {
         });
 
         BotonCargarDatos.setText("Cargar Datos");
+        BotonCargarDatos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonCargarDatosActionPerformed(evt);
+            }
+        });
 
         BotonMostrar.setText("Mostrar datos de coches");
+        BotonMostrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonMostrarActionPerformed(evt);
+            }
+        });
 
         LabelConexion.setText("ESPERANDO CONEXIÓN");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Matrícula", "Marca", "Modelo", "Color", "A?o", "Precio"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -81,18 +95,7 @@ public class VentanaGrafica extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1)
-                .addGap(46, 46, 46)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addComponent(BotonCargarDatos)
-                .addGap(30, 30, 30))
-            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(249, 249, 249)
                         .addComponent(BotonMostrar))
@@ -103,6 +106,17 @@ public class VentanaGrafica extends javax.swing.JFrame {
                         .addGap(270, 270, 270)
                         .addComponent(LabelConexion)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(46, 46, 46)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addComponent(BotonCargarDatos)))
+                .addGap(30, 30, 30))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -117,8 +131,8 @@ public class VentanaGrafica extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(BotonMostrar)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                 .addComponent(LabelConexion)
                 .addContainerGap())
         );
@@ -142,8 +156,37 @@ public class VentanaGrafica extends javax.swing.JFrame {
 
     private void botonCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCrearActionPerformed
         // TODO add your handling code here:
-        gestion.crearTablaCoches();
+        boolean tablaCreada=gestion.crearTablaCoches();
     }//GEN-LAST:event_botonCrearActionPerformed
+
+    private void BotonCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonCargarDatosActionPerformed
+        
+            File archivoCoches = new File(this.jTextField1.getText());
+        try {
+            int nCoches = gestion.cargarTablaCoches(archivoCoches);
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaGrafica.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_BotonCargarDatosActionPerformed
+
+    private void BotonMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonMostrarActionPerformed
+        // TODO add your handling code here:
+        String [] titulos = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
+        String [] fila = new String [6];
+        List<Coche> listaCoches;
+        listaCoches = gestion.mostrarCoches();
+        DefaultTableModel model = new DefaultTableModel (null, titulos);
+        for (Coche c : listaCoches){
+            fila[0] = c.getMatricula();
+            fila[1] = c.getMarca();
+            fila[2] = c.getModelo();
+            fila[3] = c.getColor();
+            fila[4] = c.getAno().toString();
+            fila[5] = c.getPrecio().toString();
+            model.addRow(fila);
+        }
+        this.jTable1.setModel(model);
+    }//GEN-LAST:event_BotonMostrarActionPerformed
 
     /**
      * @param args the command line arguments

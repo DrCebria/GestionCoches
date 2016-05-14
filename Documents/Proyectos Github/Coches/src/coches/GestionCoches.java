@@ -1,5 +1,6 @@
 package coches;
 
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,11 +24,10 @@ import javax.swing.table.DefaultTableModel;
  */
 public class GestionCoches {
 
-    
     private Connection conexion;
     String titulos[] = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
     String filas[] = new String[6];
-    String createTable = "CREATE TABLE coches ("
+    String createTable = "CREATE TABLE IF NOT EXISTS coches ("
             + "  Matricula varchar(45) NOT NULL,"
             + "  Marca varchar(45) NOT NULL,"
             + "  Modelo varchar(45) NOT NULL,"
@@ -45,7 +46,7 @@ public class GestionCoches {
      * @return Conection
      */
     public Connection crearConexion() {
-        
+
         try {
             this.conexion = DriverManager.getConnection("jdbc:mysql://localhost:3306/coches", "root", "root");
 
@@ -66,7 +67,7 @@ public class GestionCoches {
      */
     public boolean crearTablaCoches() {
         PreparedStatement ps;
-        
+
         boolean comp = false;
         try {
 
@@ -88,47 +89,72 @@ public class GestionCoches {
      * @return número de coches que hay
      */
     public int cargarTablaCoches(File fichero) throws SQLException {
-        String matricula, marca, modelo, color, ano, precio;
+        String matricula = "null", marca = "null", modelo = "null", color = "null";
+        int contador = 0, ano = 0, precio = 0;
         PreparedStatement ps;
         ResultSet rs;
         String linea;
         String[] trozos;
-        int contador = 0;
+
         try (FileReader fr = new FileReader(fichero)) {
             BufferedReader br = new BufferedReader(fr);
             while ((linea = br.readLine()) != null) {
-                contador++;
-
                 trozos = linea.split(":");
                 matricula = trozos[0];
                 marca = trozos[1];
                 modelo = trozos[2];
                 color = trozos[3];
-                ano = trozos[4];
-                precio = trozos[5];
-                ps = conexion.prepareStatement("INSERT INTO coches values ('?', '?', '?', '?', '?')");
+                ano = Integer.parseInt(trozos[4]);
+                precio = Integer.parseInt(trozos[5]);
+
+                String sql = "INSERT INTO "
+                        + "coches (matricula,marca,modelo,color,ano,precio)"
+                        + "VALUES (?,?,?,?,?,?)";
+                ps = conexion.prepareStatement(sql);
+//                try {
                 ps.setString(1, matricula);
                 ps.setString(2, marca);
                 ps.setString(3, modelo);
-                ps.setString(4, color );
-                ps.setString(5, ano);
-                ps.setString(6, precio);
-                
-                rs = ps.executeQuery();
+                ps.setString(4, color);
+                ps.setInt(5, ano);
+                ps.setInt(6, precio);
+                if (ps.executeUpdate() == 1) {
+                    contador++;
+                }
+//                } catch (SQLException ex) {
+//                    Logger.getLogger(GestionCoches.class.getName()).log(Level.SEVERE, null, ex);
+//                }
             }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(GestionCoches.class.getName()).log(Level.SEVERE, null, ex);
+
         } catch (IOException ex) {
             Logger.getLogger(GestionCoches.class.getName()).log(Level.SEVERE, null, ex);
         }
         return contador;
     }
+
+    public List<Coche> mostrarCoches() {
+        List<Coche> listaCoches = new ArrayList<>();
+        String sql = "SELECT * FROM coches;";
+        String matricula, marca, modelo, color;
+        int ano = 0, precio = 0;
+        try {
+            PreparedStatement ps = conexion.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                
+                matricula = rs.getString("Matricula");
+                marca = rs.getString("Marca");
+                modelo = rs.getString("Modelo");
+                color = rs.getString("Color");
+                ano = rs.getInt("Ano");
+                precio = rs.getInt("Precio");
+
+                Coche c = new Coche(matricula, marca, modelo, color, ano, precio);
+                listaCoches.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GestionCoches.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return listaCoches;
+    }
 }
-
-
-
-//public String[][] mostrarCoches(String sql) {
-//
-//
-//    }
-
