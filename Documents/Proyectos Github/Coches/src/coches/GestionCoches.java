@@ -2,10 +2,13 @@ package coches;
 
 import java.util.List;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,6 +19,7 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  * Esta clase reúne todos los métodos necesarios para la gestión de los coches
@@ -141,7 +145,7 @@ public class GestionCoches {
             PreparedStatement ps = conexion.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                
+
                 matricula = rs.getString("Matricula");
                 marca = rs.getString("Marca");
                 modelo = rs.getString("Modelo");
@@ -156,5 +160,41 @@ public class GestionCoches {
             Logger.getLogger(GestionCoches.class.getName()).log(Level.SEVERE, null, ex);
         }
         return listaCoches;
+    }
+
+    public File exportarCoches(TableModel datosCoche, Path archivo) throws IOException {
+        File datosExportados;
+        datosExportados = archivo.toFile();
+        String text = "";
+        int col = datosCoche.getColumnCount();
+        int fil = datosCoche.getRowCount();
+        for (int i = 0; i < fil; i++) {
+            text = text.concat("Coche n?: " + i + "\n");
+            for (int j = 0; j < col; j++) {
+                if (j == 0) {
+                    text = text.concat("Matricula " + "\t.........." + datosCoche.getValueAt(i, j));
+                }
+                if (j == 1) {
+                    text = text.concat("Marca " + "\t.........." + datosCoche.getValueAt(i, j));
+                }
+                if (j == 2) {
+                    text = text.concat("Modelo " + "\t.........." + datosCoche.getValueAt(i, j));
+                }
+                if (j == 3) {
+                    text = text.concat("Color " + "\t.........." + datosCoche.getValueAt(i, j));
+                }
+                if (j == 4) {
+                    text = text.concat("A?o" + "\t.........." + datosCoche.getValueAt(i, j));
+                }
+                if (j == 5) {
+                    text = text.concat("Precio" + "\t.........." + datosCoche.getValueAt(i, j));
+                }
+            }
+            FileWriter fw = new FileWriter(datosExportados);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(text);
+        }
+
+        return datosExportados;
     }
 }

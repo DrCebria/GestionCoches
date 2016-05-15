@@ -6,6 +6,8 @@
 package coches;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -40,6 +42,7 @@ public class VentanaGrafica extends javax.swing.JFrame {
         LabelConexion = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        BotonExportar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -90,6 +93,13 @@ public class VentanaGrafica extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(jTable1);
 
+        BotonExportar.setText("Exportar datos");
+        BotonExportar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotonExportarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -109,6 +119,9 @@ public class VentanaGrafica extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(BotonExportar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jLabel1)
@@ -132,7 +145,9 @@ public class VentanaGrafica extends javax.swing.JFrame {
                 .addComponent(BotonMostrar)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BotonExportar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(LabelConexion)
                 .addContainerGap())
         );
@@ -188,6 +203,23 @@ public class VentanaGrafica extends javax.swing.JFrame {
         this.jTable1.setModel(model);
     }//GEN-LAST:event_BotonMostrarActionPerformed
 
+    private void BotonExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonExportarActionPerformed
+        // TODO add your handling code here:
+        JFileChooser fc2 = new JFileChooser();
+         
+        
+        int returnVal = fc2.showSaveDialog(this);
+        
+        if (returnVal == fc2.SAVE_DIALOG) {
+            try {
+                File archivo = gestion.exportarCoches(jTable1.getModel(), fc2.getSelectedFile().toPath() );
+            } catch (IOException ex) {
+                Logger.getLogger(VentanaGrafica.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    }//GEN-LAST:event_BotonExportarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -226,6 +258,7 @@ public class VentanaGrafica extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotonCargarDatos;
+    private javax.swing.JButton BotonExportar;
     private javax.swing.JButton BotonMostrar;
     private javax.swing.JLabel LabelConexion;
     private javax.swing.JButton botonCrear;

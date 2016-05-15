@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -29,7 +30,22 @@ public class NewMain {
     public static void main(String[] args) {
        List<Coche> listaCoches;
        GestionCoches gestion = new GestionCoches();
-        listaCoches = gestion.mostrarCoches();
+        String [] titulos = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
+        String [] fila = new String [6];
+        List<Coche> listaCoches2;
+        listaCoches2 = gestion.mostrarCoches();
+        DefaultTableModel model = new DefaultTableModel (null, titulos);
+        for (Coche c : listaCoches2){
+            fila[0] = c.getMatricula();
+            fila[1] = c.getMarca();
+            fila[2] = c.getModelo();
+            fila[3] = c.getColor();
+            fila[4] = c.getAno().toString();
+            fila[5] = c.getPrecio().toString();
+            model.addRow(fila);
+        }
+        String tira = model.toString();
+        System.out.println(tira);
     }
     
 }
