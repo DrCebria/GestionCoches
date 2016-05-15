@@ -162,39 +162,39 @@ public class GestionCoches {
         return listaCoches;
     }
 
-    public File exportarCoches(TableModel datosCoche, Path archivo) throws IOException {
-        File datosExportados;
-        datosExportados = archivo.toFile();
-        String text = "";
+    public boolean exportarCoches(TableModel datosCoche, Path archivo) throws IOException {
+        boolean res = false;
+        FileWriter fw = new FileWriter(archivo.toFile());
+        BufferedWriter bw = new BufferedWriter(fw);
+        bw.write("Prueba");
         int col = datosCoche.getColumnCount();
         int fil = datosCoche.getRowCount();
         for (int i = 0; i < fil; i++) {
-            text = text.concat("Coche n?: " + i + "\n");
+            bw.write("Coche n?: " + i + "\r\n");
             for (int j = 0; j < col; j++) {
                 if (j == 0) {
-                    text = text.concat("Matricula " + "\t.........." + datosCoche.getValueAt(i, j));
+                    bw.write("Matricula " + "\t.........." + datosCoche.getValueAt(i, j));
                 }
                 if (j == 1) {
-                    text = text.concat("Marca " + "\t.........." + datosCoche.getValueAt(i, j));
+                    bw.write("Marca " + "\t.........." + datosCoche.getValueAt(i, j));
                 }
                 if (j == 2) {
-                    text = text.concat("Modelo " + "\t.........." + datosCoche.getValueAt(i, j));
+                    bw.write("Modelo " + "\t.........." + datosCoche.getValueAt(i, j));
                 }
                 if (j == 3) {
-                    text = text.concat("Color " + "\t.........." + datosCoche.getValueAt(i, j));
+                    bw.write("Color " + "\t.........." + datosCoche.getValueAt(i, j));
                 }
                 if (j == 4) {
-                    text = text.concat("A?o" + "\t.........." + datosCoche.getValueAt(i, j));
+                    bw.write("A?o" + "\t.........." + datosCoche.getValueAt(i, j));
                 }
                 if (j == 5) {
-                    text = text.concat("Precio" + "\t.........." + datosCoche.getValueAt(i, j));
+                    bw.write("Precio" + "\t.........." + datosCoche.getValueAt(i, j));
                 }
             }
-            FileWriter fw = new FileWriter(datosExportados);
-            BufferedWriter bw = new BufferedWriter(fw);
-            bw.write(text);
+
+            res = true;
         }
 
-        return datosExportados;
+        return res;
     }
 }

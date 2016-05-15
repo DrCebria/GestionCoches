@@ -21,15 +21,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class VentanaGrafica extends javax.swing.JFrame {
-    
+
     GestionCoches gestion = new GestionCoches();
+
     public VentanaGrafica() {
         initComponents();
         if (gestion.crearConexion() != null) {
             LabelConexion.setText("CONEXIÓN ESTABLECIDA");
         }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -154,29 +155,29 @@ public class VentanaGrafica extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private void jTextField1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MouseClicked
         // TODO add your handling code here:
         JFileChooser fc = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Archivos de texto", "txt");
         fc.setFileFilter(filter);
         int returnVal = fc.showOpenDialog(this);
-        
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
             this.jTextField1.setText(file.getAbsolutePath());
-            
+
         }
     }//GEN-LAST:event_jTextField1MouseClicked
 
     private void botonCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCrearActionPerformed
         // TODO add your handling code here:
-        boolean tablaCreada=gestion.crearTablaCoches();
+        boolean tablaCreada = gestion.crearTablaCoches();
     }//GEN-LAST:event_botonCrearActionPerformed
 
     private void BotonCargarDatosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonCargarDatosActionPerformed
-        
-            File archivoCoches = new File(this.jTextField1.getText());
+
+        File archivoCoches = new File(this.jTextField1.getText());
         try {
             int nCoches = gestion.cargarTablaCoches(archivoCoches);
         } catch (SQLException ex) {
@@ -186,12 +187,12 @@ public class VentanaGrafica extends javax.swing.JFrame {
 
     private void BotonMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonMostrarActionPerformed
         // TODO add your handling code here:
-        String [] titulos = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
-        String [] fila = new String [6];
+        String[] titulos = {"Matricula", "Marca", "Modelo", "Color", "Ano", "Precio"};
+        String[] fila = new String[6];
         List<Coche> listaCoches;
         listaCoches = gestion.mostrarCoches();
-        DefaultTableModel model = new DefaultTableModel (null, titulos);
-        for (Coche c : listaCoches){
+        DefaultTableModel model = new DefaultTableModel(null, titulos);
+        for (Coche c : listaCoches) {
             fila[0] = c.getMatricula();
             fila[1] = c.getMarca();
             fila[2] = c.getModelo();
@@ -206,17 +207,23 @@ public class VentanaGrafica extends javax.swing.JFrame {
     private void BotonExportarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonExportarActionPerformed
         // TODO add your handling code here:
         JFileChooser fc2 = new JFileChooser();
-         
-        
+
         int returnVal = fc2.showSaveDialog(this);
-        
-        if (returnVal == fc2.SAVE_DIALOG) {
+
+        if (returnVal == fc2.APPROVE_OPTION) {
+            File archivo = fc2.getSelectedFile();
+
             try {
-                File archivo = gestion.exportarCoches(jTable1.getModel(), fc2.getSelectedFile().toPath() );
+                if (gestion.exportarCoches(jTable1.getModel(), archivo.toPath())) {
+                    LabelConexion.setText("Fichero exportado");
+                } else {
+                    LabelConexion.setText("Fichero no exportado");
+
+                }
             } catch (IOException ex) {
                 Logger.getLogger(VentanaGrafica.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }//GEN-LAST:event_BotonExportarActionPerformed
 
